@@ -1,40 +1,26 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-let initialArg = 0
 let memoizedState
 
-function useReducer(reducer, initialArg, init) {
-  let initialState = void 0
-  if (typeof init !== 'undefined') {
-    initialState = init(initialArg)
-  } else {
-    initialState = initialArg
-  }
-  /*
-  * 1.useReducer是useState的内部实现
-  * 2.比如说改变状态逻辑复杂的时候，或者下一个状态依赖前一个状态的时候可以使用useReducer
-  *
-  * */
-  memoizedState = memoizedState || initialState
-  function dispatch(action) {
-    memoizedState = reducer(memoizedState, action)
-    render()
-  }
-  
-  return [memoizedState, dispatch]
-}
-
 function useState(initialState) {
-  return useReducer((oldState, newState) => newState, initialState)
+  debugger
+  memoizedState = memoizedState || initialState
+ function setState(newState) {
+   memoizedState = newState
+ }
+  
+  return [memoizedState, setState]
 }
 
 function Counter () {
+  const [name, setName] = useState('计数器')
   const [number, setNumber] = useState(0)
   return (
     <>
-      <p>{number}</p>
+      <p>{name} : {number}</p>
       
+      <button onClick={() => setName('计数器' + Date.now())}>改名称</button> &nbsp;&nbsp;
       <button onClick={() => setNumber(number + 1)}>+点击</button>
     </>
   )
