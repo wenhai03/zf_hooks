@@ -23,6 +23,7 @@ function useEffect (callback, dependencies) {
     return callback()
   }
   let lastDependencies = memoizedStates[index]
+  // 依赖想不瘦要根据state里面的值判断么？为什么实现的时候只判断两次依赖性是否一样呢，存的值
   let changed = lastDependencies ? !dependencies.every((item, index) => item === lastDependencies[index]) : true
   if (changed) {
     callback()
