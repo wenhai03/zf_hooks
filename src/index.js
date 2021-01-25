@@ -16,21 +16,19 @@ function useState (initialState) {
   
   return [memoizedStates[index++], setState]
 }
-/*
-* 在函数主体中，不能具有副作用的逻辑，订阅，定时器修改DOM
-* useEffect 给函数组件添加了操作副作用的
-* 类组件 didmount didupdate willunmount
-*
-* */
-let lastDependencies
 
 function useEffect (callback, dependencies) {
-  if (!dependencies) return callback()
+  if (!dependencies) {
+    index++
+    return callback()
+  }
+  let lastDependencies = memoizedStates[index]
   let changed = lastDependencies ? !dependencies.every((item, index) => item === lastDependencies[index]) : true
   if (changed) {
     callback()
-    lastDependencies = dependencies
+    memoizedStates[index] = dependencies
   }
+  index++
 }
 
 function Counter () {
@@ -39,7 +37,12 @@ function Counter () {
   
   useEffect(() => {
     // 解决number每次都打印？？
-    console.log('number -> ', number)
+    console.log('number1 -> ', number)
+  }, [])
+  
+  useEffect(() => {
+    // 解决number每次都打印？？
+    console.log('number2 -> ', number)
   }, [number])
   
   return (
